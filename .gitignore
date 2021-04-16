@@ -1,0 +1,9 @@
+Debug/
+Build/
+.settings/
+data/
+.vscode/
+scripts/
+.clang-format
+.project
+.cproject

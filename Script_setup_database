@@ -1,0 +1,52 @@
+#!/bin/sh
+
+ENV_VAR=DATABASE
+title_color=3
+Line_color=5
+text_color=15
+
+tput setaf $title_color; echo "
+	-------------------------------------------
+	- SCRIPT D'AIDE D'INSTALLATION DU SERVEUR -
+	-------------------------------------------
+"  
+tput setaf $text_color; echo "
+CE REPERTOIRE DOIT CORRESPONDRE A L'EMPLACEMENT DES BASES DE DONNEES!
+
+La ligne suivante correspond au path absolue de ce repertoire:
+
+---------------------------------------------------------------------"
+tput setaf $Line_color; echo export $ENV_VAR=$PWD  
+tput setaf $text_color; echo "---------------------------------------------------------------------
+
+vous pouvez directement la copier avec ctrl+shift+c
+
+Vous pouvez entrer cette ligne de commande dans le shell present a
+condition que cet EXACT meme terminal soit le parent du serveur.
+
+Les etapes suivantes sont uniquement pour une utilisation du serveur
+par un autre terminal.
+
+La prochaine etape est d'ouvrir le fichier des variables
+d envrionnement. Un exemple d'ouverture est donnee avec nano:
+
+---------------------------------------------------------------------"
+tput setaf $Line_color; echo nano ~/.profile  
+tput setaf $text_color; echo "---------------------------------------------------------------------
+
+Ajouter la ligne initiale a la fin du document, sauvegarder les 
+changements. Fermer le fichier et entrer fermez la session en cours 
+(log out)
+ 
+Apres vous avoir reconnecte, Il est possible de valider l'execution
+avec la commande suivante:
+
+---------------------------------------------------------------------" 
+tput setaf $Line_color; echo printenv $ENV_VAR
+tput setaf $text_color; echo "---------------------------------------------------------------------
+
+Si la sortie correspond au chemin donnee, le chemin est bien
+enregistree.
+ 
+NOTE: Vous devrez retirer manuellement la ligne du fichier .profile
+lors de la desinstallation afin de l'eliminer du systeme."
