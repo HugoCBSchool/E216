@@ -22,7 +22,7 @@
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
 // Header file
-#include "modules/interface.h"
+#include "interface.h"
 #include "base.h"
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 /*							CONSTANTES D'IMPLEMENTATION     							*/
@@ -848,7 +848,7 @@ int op_ajouter(h_private_file_system pfs, pt_critere crit){
 	str notthere=NULL;
 	if( list_get_nb_elem(args->list_nom)<(elem=critere_get_taille(tag_personne,crit))){
 		for(int nm=elem-1;nm>=0;--nm){
-			bool match=FALSE;
+			BOOL match=FALSE;
 			for(h_donnee_nom n=list_itor_head(args->list_nom);
 				n;
 				n=list_itor_next(args->list_nom)
@@ -1448,7 +1448,7 @@ extern int si_resultat_invalide_success(
 }
 //----------------------------------------------------------------------------------------
 /*
-bool  liste_id_titre_add_id_disponible(str id_disponible){
+BOOL  liste_id_titre_add_id_disponible(str id_disponible){
 	if(!m_id_titre_disponible){
 		if(!( m_id_titre_disponible=list_new(free,num_ligne_leq) ) )
 			return FALSE;
@@ -1524,7 +1524,7 @@ str liste_id_nom_get_id_disponible(){
 	return strdup(m_dernier_id_nom);
 }
 //----------------------------------------------------------------------------------------
-bool liste_id_nom_add_id_disponible(str id_disponible){
+BOOL liste_id_nom_add_id_disponible(str id_disponible){
 	if(!m_id_nom_disponible){
 		if(!( m_id_nom_disponible=list_new(free,num_ligne_leq)))
 			return FALSE;

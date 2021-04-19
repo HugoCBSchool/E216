@@ -89,7 +89,7 @@
 */
 
 // Header file.
-#include "modules/resultat.h"
+#include "resultat.h"
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 /*							CONSTANTES D'IMPLEMENTATION     							*/

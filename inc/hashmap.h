@@ -29,7 +29,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "debug_include.h"
-#include "util/funk.h"
+#include "funk.h"
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 /*							Definitions de types          								*/

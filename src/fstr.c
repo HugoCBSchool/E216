@@ -1,8 +1,8 @@
-#include "util/fstr.h"
+#include "fstr.h"
 
 
 //===============================================================================
-bool __fstr_cashvariade_formater_dest( str* dst, cstr fmt, ... ){
+BOOL __fstr_cashvariade_formater_dest( str* dst, cstr fmt, ... ){
     str     buf         =NULL;
     str     cash_tag    =NULL;
     str     cash_value  =NULL;
@@ -104,7 +104,7 @@ str  fstr_remplacer_make( cstr src, cstr old_str, cstr new_str){
 
 	return buf;
 }
-bool fstr_remplacer_dest( str* dst, cstr src, cstr old_str, cstr new_str){
+BOOL fstr_remplacer_dest( str* dst, cstr src, cstr old_str, cstr new_str){
     if(!( new_str && src && old_str && *src && *old_str && dst)){
 		return FALSE;
 	}
@@ -160,7 +160,7 @@ bool fstr_remplacer_dest( str* dst, cstr src, cstr old_str, cstr new_str){
 	return TRUE;
 }
 //===============================================================================
-bool  fstr_flatten_table_string_dest(str* dest, h_table_string table, cstr sep){
+BOOL  fstr_flatten_table_string_dest(str* dest, h_table_string table, cstr sep){
     str buf=fstr_flatten_table_string_make(table,sep);
     if(!buf)
         return FALSE;
@@ -173,7 +173,7 @@ bool  fstr_flatten_table_string_dest(str* dest, h_table_string table, cstr sep){
 str   fstr_flatten_table_string_make(           h_table_string table, cstr sep){
     str  buf     =NULL;
     str  tail    =NULL;
-    bool success =TRUE;
+    BOOL success =TRUE;
 
     if( !table || !sep || !table_string_get_taille(table) )
         return NULL;
@@ -209,7 +209,7 @@ str   fstr_flatten_table_string_make(           h_table_string table, cstr sep){
 //===============================================================================
 
 
-bool  fstr_flatten_linklist_dest( str* dest, h_list list, cstr sep){
+BOOL  fstr_flatten_linklist_dest( str* dest, h_list list, cstr sep){
     
     str buf=NULL;
     str tail=NULL;
@@ -259,7 +259,7 @@ str   fstr_flatten_linklist_make(            h_list list, cstr sep){
     str buf=NULL;
     return (fstr_flatten_linklist_dest(&buf,list,sep)?buf:NULL);
 }
-bool  fstr_flatten_array_dest(    str* dest, cstr*  list, uint sz, cstr sep){
+BOOL  fstr_flatten_array_dest(    str* dest, cstr*  list, uint sz, cstr sep){
     str buf=NULL;
     str tail=NULL;
 
@@ -314,7 +314,7 @@ str   fstr_flatten_array_make(               cstr*  list, uint sz, cstr sep){
     return (fstr_flatten_array_dest(&buf,list,sz,sep)?buf:NULL);
 }
 /*
-bool  fstr_gawkfmt_interval_dest(str* dest, cstr column, cstr interval){
+BOOL  fstr_gawkfmt_interval_dest(str* dest, cstr column, cstr interval){
     char *buf=NULL , *low=NULL , *high=NULL;
     h_table_string table=NULL;
     int cpt;
@@ -387,7 +387,7 @@ str   fstr_gawkfmt_pattern_critere( pt_critere critere, t_tag_fichier tag){
     str   buf2    =NULL;
     h_list  ls_str  =NULL;
     h_list  ls_str_annee=NULL;
-    bool    success=TRUE;
+    BOOL    success=TRUE;
 
     if(!critere)
         return NULL;

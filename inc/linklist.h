@@ -9,8 +9,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include "util/util.h"
-#include "util/funk.h"
+#include "util.h"
+#include "funk.h"
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
 
@@ -23,7 +23,26 @@
  * @note   
  * @retval None
  */
+typedef struct list_node t_list_node,*h_list_node;
+struct list_node{
+    void*       data;
+    h_list_node next;
+    h_list_node prev;
+};
 typedef struct list t_list,*h_list;
+struct list{
+    unsigned long   n_elem;
+    fp_comp         comp;
+    fp_dtor         dtor;
+
+    h_list_node     head;
+    h_list_node     tail;
+    h_list_node     itor;
+
+    BOOL            sorted;
+};
+
+
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
 
@@ -54,14 +73,14 @@ void        list_free(h_list list);
  * @param  list: 
  * @retval 
  */
-bool         list_is_sorted(h_list list);
+BOOL         list_is_sorted(h_list list);
 /**
  * @brief  
  * @note   Serveur-HLR07: Tri de liste de numéros de ligne
  * @param  list: 
  * @retval 
  */
-bool         list_sort(h_list list);
+BOOL         list_sort(h_list list);
 //----------------------------------------------------------------------------------
 /**
  * @brief  
@@ -69,7 +88,7 @@ bool         list_sort(h_list list);
  * @param  list: 
  * @retval 
  */
-bool         list_get_nb_elem(h_list list);
+BOOL         list_get_nb_elem(h_list list);
 /**
  * @brief  
  * @note   
@@ -86,7 +105,7 @@ void*       list_get_elem_index(h_list list,unsigned long index);
  * @param  data: 
  * @retval 
  */
-bool         list_set_elem_index(h_list list,unsigned long index,void* data);
+BOOL         list_set_elem_index(h_list list,unsigned long index,void* data);
 /**
  * @brief  
  * @note   
@@ -94,7 +113,7 @@ bool         list_set_elem_index(h_list list,unsigned long index,void* data);
  * @param  dtor: 
  * @retval 
  */
-bool         list_set_destructeur(h_list list,fp_dtor dtor);
+BOOL         list_set_destructeur(h_list list,fp_dtor dtor);
 /**
  * @brief  
  * @note   
@@ -102,7 +121,7 @@ bool         list_set_destructeur(h_list list,fp_dtor dtor);
  * @param  comp: 
  * @retval 
  */
-bool         list_set_comparateur(h_list list,fp_comp comp);
+BOOL         list_set_comparateur(h_list list,fp_comp comp);
 //----------------------------------------------------------------------------------
 /**
  * @brief  
@@ -149,7 +168,7 @@ void*       list_get_elem_index(h_list list,unsigned long index);
  * @param  data: 
  * @retval 
  */
-bool         list_set_elem_index(h_list list,unsigned long index,void* data);
+BOOL         list_set_elem_index(h_list list,unsigned long index,void* data);
 /**
  * @brief  
  * @note   
@@ -157,7 +176,7 @@ bool         list_set_elem_index(h_list list,unsigned long index,void* data);
  * @param  dtor: 
  * @retval 
  */
-bool         list_set_destructeur(h_list list,fp_dtor dtor);
+BOOL         list_set_destructeur(h_list list,fp_dtor dtor);
 /**
  * @brief  
  * @note   
@@ -165,7 +184,7 @@ bool         list_set_destructeur(h_list list,fp_dtor dtor);
  * @param  comp: 
  * @retval 
  */
-bool         list_set_comparateur(h_list list,fp_comp comp);
+BOOL         list_set_comparateur(h_list list,fp_comp comp);
 //----------------------------------------------------------------------------------
 /**
  * @brief  
@@ -175,7 +194,7 @@ bool         list_set_comparateur(h_list list,fp_comp comp);
  * @param  index: 
  * @retval 
  */
-bool         list_push_index(h_list list,void* data,unsigned long index);
+BOOL         list_push_index(h_list list,void* data,unsigned long index);
 /**
  * @brief  
  * @note   :Serveur-HLR06 - mutateur de liste de numéro de ligne
@@ -183,7 +202,7 @@ bool         list_push_index(h_list list,void* data,unsigned long index);
  * @param  data: 
  * @retval 
  */
-bool         list_push_head(h_list list,void* data);
+BOOL         list_push_head(h_list list,void* data);
 /**
  * @brief  
  * @note   :Serveur-HLR06 - mutateur de liste de numéro de ligne
@@ -191,7 +210,7 @@ bool         list_push_head(h_list list,void* data);
  * @param  data: 
  * @retval 
  */
-bool         list_push_tail(h_list list,void* data);
+BOOL         list_push_tail(h_list list,void* data);
 /**
  * @brief  
  * @note   :Serveur-HLR06 - mutateur de liste de numéro de ligne
@@ -199,7 +218,7 @@ bool         list_push_tail(h_list list,void* data);
  * @param  data: 
  * @retval 
  */
-bool         list_push_itor(h_list list, void* data);
+BOOL         list_push_itor(h_list list, void* data);
 /**
  * @brief  
  * @note   :Serveur-HLR06 - mutateur de liste de numéro de ligne
@@ -207,7 +226,7 @@ bool         list_push_itor(h_list list, void* data);
  * @param  data: 
  * @retval 
  */
-bool         list_push_sort(h_list list, void* data);
+BOOL         list_push_sort(h_list list, void* data);
 //----------------------------------------------------------------------------------
 /**
  * @brief  

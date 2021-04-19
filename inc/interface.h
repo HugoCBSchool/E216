@@ -25,11 +25,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
-#include "modules/critere.h"
-#include "modules/parser.h"
-#include "util/hashmap.h"
-#include "util/util.h"
-#include "modules/file_system.h"
+#include "critere.h"
+#include "parser.h"
+#include "hashmap.h"
+#include "util.h"
+#include "file_system.h"
 #include "debug_include.h"
 #include "base.h"
 #include "buffer.h"

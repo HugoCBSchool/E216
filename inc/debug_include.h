@@ -9,6 +9,7 @@
 
 //#define __DEBUG						// active les main de debug
 
+#include "base.h"
 
 #ifdef  __DEBUG
 //	#define __DEBUG_PHASE_1					// active le main de debug de la phase 1

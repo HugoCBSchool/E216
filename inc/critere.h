@@ -75,10 +75,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "util/funk.h"
-#include "util/fstr.h"
-#include "util/util.h"
-#include "util/table_string.h"
+#include "funk.h"
+#include "fstr.h"
+#include "util.h"
+#include "table_string.h"
 #include "debug_include.h"
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
@@ -122,7 +122,14 @@
  */
 typedef struct critere 	t_critere	,
  						*pt_critere	;	 // Pointeur vers le type t_critere
-
+struct critere
+{
+	str 		   type_titre;
+	h_table_string titre;
+	h_table_string personne;
+	h_table_string annee;
+	h_table_string cote;
+};
 
 /**
  * @brief  type enumere pour encapsuler le tag d'argument de commandes au programme.
@@ -210,7 +217,7 @@ cstr critere_get_type_titre(pt_critere const critere);
  * @param  type_titre: le type de titre a ajouter.
  * @retval 1 lors de succes, 0 sinon
  */
-bool critere_set_type_titre(pt_critere const critere, cstr type_titre);
+BOOL critere_set_type_titre(pt_critere const critere, cstr type_titre);
 
 /**
  * @brief  fonction permettant d'observer un critere de tag donne par indexe

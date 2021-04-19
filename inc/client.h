@@ -44,9 +44,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "modules/critere.h"
-#include "util/fstr.h"
-#include "util/util.h"
+#include "critere.h"
+#include "fstr.h"
+#include "util.h"
 #include "debug_include.h"
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
@@ -88,7 +88,11 @@ typedef struct operation t_operation, *pt_operation;
 
 // Type de l'operation recu par le programme.
 typedef char type_alias;
-
+struct operation
+{
+	type_alias T;
+	pt_critere critere;
+};
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
 
@@ -201,7 +205,7 @@ unsigned int operation_set_type_titre(pt_operation oper, char* type_titre);
  * @retval	En cas de reussite, retourne la chaine de caractere resultante. 
  *			En cas d'erreur, elle retourne un pointeur NULL.
  */
-str serialiser_operation(pt_operation oper, cstr sep);
+str serialiser_operation(pt_operation oper);
 
 //----------------------------------------------------------------------------------------
 
@@ -211,7 +215,7 @@ str serialiser_operation(pt_operation oper, cstr sep);
  * @retval	En cas de reussite, retourne la structure des operations resultante. 
  *			En cas d'erreur, elle retourne un pointeur NULL.
  */
-pt_operation deserialiser_operation(cstr serie, cstr sep);
+pt_operation deserialiser_operation(cstr serie);
 
 //----------------------------------------------------------------------------------------
 

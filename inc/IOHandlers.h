@@ -10,7 +10,7 @@
 #include "client.h"
 #include "workers.h"
 #include "networking.h"
-
+#include "parse.h"
 typedef enum _handlerStatus{
     E_TERMINATE      =-6,
     E_WRONG_HANDLER2 =-5,

@@ -25,9 +25,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "util/util.h"
+#include "util.h"
 
-#include "util/funk.h"
+#include "funk.h"
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 /*							TYPES ET STRUCTURES OPAQUES     							*/
@@ -51,12 +51,12 @@ inline int count_occurence(cstr ofthis,cstr inthis){
 		++ret;
 	return ret;
 }
-inline void tokenize(str this,str* array,cstr sep){
-	array[0]=this;
+inline void tokenize(str thiss,str* array,cstr sep){
+	array[0]=thiss;
 	int i=0;
 	int len=strlen(sep);
-	str csormax=this+strlen(this);
-	for(str csor=strstr(this,sep);csor;csor=strstr(csor,sep)){
+	str csormax=thiss+strlen(thiss);
+	for(str csor=strstr(thiss,sep);csor;csor=strstr(csor,sep)){
 		memset(csor,0,len*sizeof(char));
 		if(len<=csormax-csor)
 			array[++i]=(csor+len);
@@ -96,7 +96,7 @@ unsigned int table_string_unbind2(str* dest,h_table_string table,cstr sep);
  * @param  table_str: la table a liberer
  * @retval None
  */
-void table_string_liberer(h_table_string table_str);
+void table_string_liberer(void* table_str);
 
 /**
  * @brief  permet de savoir le nombre d'elements dans la table

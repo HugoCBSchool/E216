@@ -3,6 +3,8 @@
 
 #include "base.h"
 
+#define PORT_NUM        "8888"
+#define SERVER_IP       "127.0.0.1"
 
 sys_t  SocketSetNonblocking(sockFD sock);
 sockFD SocketCreateAndBindAndListen(const str portNUM);

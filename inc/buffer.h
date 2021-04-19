@@ -3,6 +3,8 @@
 #define __BUFFER__H__
 
 #include "base.h"
+#include <stdarg.h>
+
 #define PGSIZE 4096
 
 Class(Buffer,
@@ -38,5 +40,7 @@ ssize_t  BufferStream_Write(h_Buffer buf,FILE* file);
 ssize_t  BufferGetSizeOKForRead(h_Buffer buf);
 ssize_t  BufferGetSizeOKForWrite(h_Buffer buf);
 ssize_t  BufferGetSizeTotal(h_Buffer buf);
+
+ssize_t  BufferPrintf(h_Buffer buf,const str templ,int nbargs,...);
 
 #endif  //!__BUFFER__H__

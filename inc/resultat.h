@@ -157,9 +157,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "util/util.h"
-#include "util/table_string.h"
-#include "util/linklist.h"
+#include "util.h"
+#include "table_string.h"
+#include "linklist.h"
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 /*							CONSTANTES                    								*/

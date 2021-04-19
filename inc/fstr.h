@@ -6,11 +6,11 @@
 #include <ctype.h>
 
 
-#include "util/util.h"
-#include "util/linklist.h"
-#include "util/table_string.h"
+#include "util.h"
+#include "linklist.h"
+#include "table_string.h"
 
-//#include "modules/critere.h"
+//#include "critere.h"
 
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -52,7 +52,7 @@
  *                  );     
  * @retval TRUE on success, FALSE otherwise meaning that dst is also unchanged
  */
-bool __fstr_cashvariade_formater_dest( str*dst, cstr fmt, ... );
+BOOL __fstr_cashvariade_formater_dest( str*dst, cstr fmt, ... );
 str  __fstr_cashvariade_formater_make(          cstr fmt, ... );
 #define fstr_cashvariade_formater_dest(str_p_destination_ref,cstr_format_template,...) (\
     __fstr_cashvariade_formater_dest(\
@@ -79,7 +79,7 @@ str  __fstr_cashvariade_formater_make(          cstr fmt, ... );
  * @param  new_str: 
  * @retval 
  */
-bool fstr_remplacer_dest( str* dst, cstr src, cstr old_str , cstr new_str );
+BOOL fstr_remplacer_dest( str* dst, cstr src, cstr old_str , cstr new_str );
 str  fstr_remplacer_make(           cstr src, cstr old_str , cstr new_str );
 //==============================================================================
 /**
@@ -90,7 +90,7 @@ str  fstr_remplacer_make(           cstr src, cstr old_str , cstr new_str );
  * @param  sep: 
  * @retval 
  */
-bool fstr_flatten_table_string_dest(str* dest, h_table_string table, cstr sep);
+BOOL fstr_flatten_table_string_dest(str* dest, h_table_string table, cstr sep);
 str  fstr_flatten_table_string_make(           h_table_string table, cstr sep);
 /**
  * @brief  
@@ -100,7 +100,7 @@ str  fstr_flatten_table_string_make(           h_table_string table, cstr sep);
  * @param  sep: 
  * @retval 
  */
-bool fstr_flatten_linklist_dest(str* dest, h_list list, cstr sep);
+BOOL fstr_flatten_linklist_dest(str* dest, h_list list, cstr sep);
 str  fstr_flatten_linklist_make(           h_list list, cstr sep);
 /**
  * @brief  
@@ -111,7 +111,7 @@ str  fstr_flatten_linklist_make(           h_list list, cstr sep);
  * @param  sep: 
  * @retval 
  */
-bool fstr_flatten_array_dest(str* dest, cstr* list, uint sz, cstr sep);
+BOOL fstr_flatten_array_dest(str* dest, cstr* list, uint sz, cstr sep);
 str  fstr_flatten_array_make(           cstr* list, uint sz, cstr sep);
 //==============================================================================
 

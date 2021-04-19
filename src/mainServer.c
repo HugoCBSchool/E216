@@ -1,6 +1,5 @@
 #include "workers.h"
 
-#define PORT_NUM        "8888"
 #define NB_IO_THREAD    4
 #define NB_TASK_THREAD  8
 

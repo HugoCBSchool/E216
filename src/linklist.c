@@ -1,13 +1,8 @@
-#include "util/linklist.h"
+#include "linklist.h"
 
 
 //==================================================================================
-typedef struct list_node t_list_node,*h_list_node;
-struct list_node{
-    void*       data;
-    h_list_node next;
-    h_list_node prev;
-};
+
 //----------------------------------------------------------------------------------
 h_list_node list_node_new(){
     return (h_list_node)calloc(1,sizeof(t_list_node));
@@ -48,7 +43,7 @@ void*       list_node_pop(  h_list_node node ){
 
     return data;
 }
-bool         list_node_swap( h_list_node lhs, h_list_node rhs ){
+BOOL         list_node_swap( h_list_node lhs, h_list_node rhs ){
     if(!lhs||!rhs)
         return FALSE;
 
@@ -63,17 +58,7 @@ bool         list_node_swap( h_list_node lhs, h_list_node rhs ){
 
 
 //==================================================================================
-struct list{
-    unsigned long   n_elem;
-    fp_comp         comp;
-    fp_dtor         dtor;
 
-    h_list_node     head;
-    h_list_node     tail;
-    h_list_node     itor;
-
-    bool            sorted;
-};
 //----------------------------------------------------------------------------------
 h_list  list_new(  fp_dtor dtor, fp_comp comp ){
     h_list ret=(h_list)calloc(1,sizeof(struct list));
@@ -96,10 +81,10 @@ void    list_free( h_list list ){
     list=NULL;
 }
 //----------------------------------------------------------------------------------
-bool     list_is_sorted( h_list list ){
+BOOL     list_is_sorted( h_list list ){
     return list->sorted;
 }
-bool     list_sort(      h_list list ){
+BOOL     list_sort(      h_list list ){
     if(!list)
         return FALSE;
 
@@ -133,7 +118,7 @@ bool     list_sort(      h_list list ){
     return TRUE;
 }
 //----------------------------------------------------------------------------------
-bool     list_get_nb_elem(     h_list list ){
+BOOL     list_get_nb_elem(     h_list list ){
     return list->n_elem;
 }
 void*    list_get_elem_index(  h_list list, unsigned long index ){
@@ -154,7 +139,7 @@ void*    list_get_elem_index(  h_list list, unsigned long index ){
     }
     return node->data;
 }
-bool     list_set_elem_index(  h_list list, unsigned long index, void* data ){
+BOOL     list_set_elem_index(  h_list list, unsigned long index, void* data ){
     h_list_node node=NULL;
     if( !list || !data || index>=list->n_elem || !list->head)
         return FALSE;
@@ -178,13 +163,13 @@ bool     list_set_elem_index(  h_list list, unsigned long index, void* data ){
     node->data=data;
     return TRUE;
 }
-bool     list_set_destructeur( h_list list, fp_dtor dtor ){
+BOOL     list_set_destructeur( h_list list, fp_dtor dtor ){
     if( !list || list->n_elem)
         return FALSE;
     list->dtor=dtor;
     return TRUE;
 }
-bool     list_set_comparateur( h_list list, fp_comp comp ){
+BOOL     list_set_comparateur( h_list list, fp_comp comp ){
     if( !list || list->n_elem)
         return FALSE;
     list->comp=comp;
@@ -224,7 +209,7 @@ void    list_foreach_valeur_context( h_list list, fp_val_ctx f, void* context ){
     }
 }
 //----------------------------------------------------------------------------------
-bool     list_push_index( h_list list, void* data, unsigned long index ){
+BOOL     list_push_index( h_list list, void* data, unsigned long index ){
     if( !( list && data && (index<=list->n_elem)))
         return FALSE;
 
@@ -255,7 +240,7 @@ bool     list_push_index( h_list list, void* data, unsigned long index ){
     list->tail=list->tail?list->tail:nouv;
     return TRUE;
 }
-bool     list_push_head(  h_list list, void* data ){
+BOOL     list_push_head(  h_list list, void* data ){
 
     if(!list||!data)
         return FALSE;
@@ -278,7 +263,7 @@ bool     list_push_head(  h_list list, void* data ){
 
     return TRUE;
 }
-bool     list_push_tail(  h_list list, void* data ){
+BOOL     list_push_tail(  h_list list, void* data ){
     if(!list||!data)
         return FALSE;
     
@@ -299,7 +284,7 @@ bool     list_push_tail(  h_list list, void* data ){
     list->sorted=FALSE;
      return TRUE;
 }
-bool     list_push_itor(  h_list list, void* data ){
+BOOL     list_push_itor(  h_list list, void* data ){
     if(!list||!data||!list->itor)
         return FALSE;
     
@@ -323,7 +308,7 @@ bool     list_push_itor(  h_list list, void* data ){
     list->tail=list->tail?list->tail:nouv;
     return FALSE;
 }
-bool     list_push_sort(  h_list list, void* data ){
+BOOL     list_push_sort(  h_list list, void* data ){
     if(!list||!data||!list->comp)
         return FALSE;
 

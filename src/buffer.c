@@ -1,7 +1,6 @@
 
 #include "buffer.h"
 
-
 h_Buffer    BufferNew(ssize_t size){
     char*    buf_head      =xcalloc(size+1,sizeof(char));
     h_Buffer buf           =xmalloc(sizeof(Buffer));
@@ -150,4 +149,45 @@ ssize_t     BufferGetSizeTotal(h_Buffer buf){
     if(!buf->buf_head)
         return 0;
     return (buf->buf_tail-buf->buf_head);
+}
+
+
+str  BufferPrintf(h_Buffer buf,const str templ,int nbargs,...){
+    va_list     ls;
+    str*        args=xcalloc(nbargs,sizeof(str));
+    int         len=strlen(templ)-nbargs*strlen("%s");
+
+    {   va_start(ls,nbargs);
+        for(int i=0;i<nbargs;++i){
+            len+=strlen(
+                args[i]=(
+                    (args[i]=va_arg(ls,str))
+                    ?   args[i]
+                    :   ""
+                )
+            );      
+        }
+        va_end(ls,nbargs);
+    }
+    {   BufferInit(buf,(len+1)*sizeof(char));
+
+        str head=templ;
+        str tail;
+        for(int i=0;i<nbargs;++i){
+            tail=strstr(head,"%s");
+            strncat(buf->buf_head,head,(tail-head));
+            head=tail+strlen("%s");
+
+            strcat(buf->buf_head,args[i]);
+        }
+        if(*head)
+            strcat(buf->buf_head,head);
+        
+        buf->csor_rd=buf->buf_head+strlen(buf->buf_head);
+        buf->csor_wr=buf->buf_head;
+    
+        free(args);
+    }
+    
+    return buf->buf_head;
 }

@@ -20,8 +20,8 @@
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
 // Header file.
-#include "util/table_string.h"
-#include "util/util.h"
+#include "table_string.h"
+#include "util.h"
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 /*							TYPES ET STRUCTURES OPAQUES     							*/
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
@@ -187,24 +187,25 @@ unsigned int table_string_unbind2(str* dest,h_table_string table,cstr sep){
 	return TRUE;
 }
 //-------------------------------------------
-void table_string_liberer(h_table_string table_str){
+void table_string_liberer(void* table_str){
 	/**
 	 * Strategie: On doit faire 2 choses seulement.
 	 * 	1- on libere le data sousjascent accessible via le premier pointeur du array
 	 *  2- on libere la table de pointeur.
 	 * Pour plus dinformation, voir implementation de creer_table_critere.
 	 */
+	h_table_string s=Cast(table_string,table_str);
 
-	if(table_str){
-        if(table_str->table){
-            free(table_str->table[0]);  //libere le data sousjascent
-            table_str->table[0]=NULL;
-            free(table_str->table);     //libere linterface
-            table_str->table=NULL;
+	if(s){
+        if(s->table){
+            free(s->table[0]);  //libere le data sousjascent
+            s->table[0]=NULL;
+            free(s->table);     //libere linterface
+            s->table=NULL;
         }
 	}
-	free(table_str);//libere la table de pointeurs
-	table_str=NULL;
+	free(s);//libere la table de pointeurs
+	s=NULL;
 }
 //-------------------------------------------
 unsigned int table_string_get_taille(h_table_string table_str){

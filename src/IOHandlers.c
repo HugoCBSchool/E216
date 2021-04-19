@@ -1,5 +1,5 @@
 #include "IOHandlers.h"
-
+#include "parse.h"
 //these will all segfault if runned in the context of any other than a IOWorker thread
 Class(ListenData,
     struct sockaddr socketAddress;
@@ -12,6 +12,7 @@ extern sys_t handleAccept(          h_Evt evt){
     struct sockaddr_in  client;
     int                 cxlen;
     Evt                 stub={0};
+    sockFD              commfd;
 
     if(!(evt->events&handler->mode))
         return E_WRONG_HANDLER;
@@ -21,7 +22,7 @@ extern sys_t handleAccept(          h_Evt evt){
     
     switch(commfd=accept4(
         handler->eventSource,
-        &client,&cxlen
+        &client,&cxlen,
         SOCK_NONBLOCK
     )){
         case -1: 
@@ -79,7 +80,7 @@ extern sys_t handleInit( h_Evt evt){
         default://if not done and not fatal error
             //register again for the same callback/event
             handler->mode=NOTIFY_ONCE(EPOLLIN);
-            ReactorReRegister(ioScope->ioreactor,handler);
+            ReactorReRegister(Scope->reactor,handler);
 
             return HANDLER_SUCCESS;
     }
@@ -118,12 +119,12 @@ extern sys_t handleRead( h_Evt evt){
                 return E_IO_ERROR;//the reactor himself will decide wether to register again or not
         default://if not done and not fatal error
             //register again for the same callback/event
-            ReactorRegister(ioScope->ioreactor,handler);
+            ReactorRegister(Scope->reactor,handler);
             return HANDLER_SUCCESS;
     }
 
     {   //deserialize and setup the handler for further processing
-        if(!(op=deserialiser_operation(serial=BufferMove(buf)))){
+        if(!(op=deserialiser_operation(serial=(str)BufferMove(buf)))){
             free(serial);
             errno=ENOMEM;
             return E_SERIALIZATION;
@@ -141,7 +142,11 @@ extern sys_t handleRead( h_Evt evt){
     }
 
     //send the task to task handlers
-    switch(nbytes=write(ioScope->toTaskWorkers,&handler,sizeof(h_EvtHandler))){
+    switch(nbytes=write(
+        Cast(IOWorkerScope,Scope)->toTaskWorkers,
+        &handler,
+        sizeof(h_EvtHandler)
+    )){
         case -1:
             if(!errno&(EAGAIN|EWOULDBLOCK))
                 return E_IO_ERROR;
@@ -178,13 +183,13 @@ extern sys_t handleWrite(h_Evt evt){
 
         default://default is to register again
             handler->mode=NOTIFY_ONCE(EPOLLOUT);
-            ReactorRegister(handler->reactor,handler);
+            ReactorRegister(Scope->reactor,handler);
 
             return HANDLER_SUCCESS;
     }
 
     {   //cleanup
-        ReactorUnregister(handler->reactor,handler);
+        ReactorUnregister(Scope->reactor,handler);
         EvtHandlerFree(handler);
         evt->data.ptr=NULL;//ensures the reactor doesnt try something stupid
     }
@@ -200,8 +205,7 @@ extern sys_t handleTaskCompletion(h_Evt evt){
 
     if(!(evt->events & handler->mode)){
         errno=EINVAL;
-        exitvalue=E_WRONG_HANDLER2;
-        goto _register;
+        return E_WRONG_HANDLER;
     }
 
     switch((nb_elem=read(handler->eventSource,&recieved,sizeof(h_EvtHandler)))){
@@ -216,12 +220,11 @@ extern sys_t handleTaskCompletion(h_Evt evt){
         default:
             //setup the reactor-specific context attributes
             recieved->mode       =NOTIFY_ONCE(EPOLLOUT);
-            recieved->reactor    =ioScope->ioreactor;
             recieved->handleEvent=handleWrite;         
 
             Evt dummy={.events=NOTIFY_ONCE(EPOLLOUT),.data.ptr=recieved};
 
-            return handleWrite(dummy);//this will take care of registration
+            return handleWrite(&dummy);//this will take care of registration
     }
 
     return HANDLER_SUCCESS;//never here
@@ -252,5 +255,114 @@ extern sys_t handleVisorMsg(h_Evt evt){
     return exitval;
 }
 extern sys_t handleTaskReception(h_Evt evt){
-    
+    h_EvtHandler handler        =Cast(EvtHandler,evt->data.ptr);
+    h_EvtHandler handler_recv;
+    pt_operation op;
+    CommHeader   head={.sentinel=SENTINEL,.size=0};
+    h_Buffer     reply=BufferNew(2);
+    if( !(  evt->events & handler->mode ) ){
+        errno=EINVAL;
+        return E_WRONG_HANDLER;//must tell epoll to notify the reactor manager
+    }
+
+    //read from the socket
+    switch(read(handler->eventSource,&handler_recv,sizeof(h_EvtHandler))){
+        case -1://if error
+            if( errno != (EAGAIN|EWOULDBLOCK) )
+                return E_IO_ERROR;//the reactor himself will decide wether to register again or not
+        case 0:
+            return HANDLER_SUCCESS;
+        default:
+            //all good here
+            break;
+    }
+
+    op=(pt_operation)handler_recv->eventData;
+
+    switch(op->T){
+        case RECHERCHE:{
+            h_list ls;
+            str result;
+
+            pthread_mutex_lock(Cast(TaskWorkerScope,Scope)->mut);
+            pthread_rwlock_rdlock(Cast(TaskWorkerScope,Scope)->lock);
+            pthread_mutex_unlock(Cast(TaskWorkerScope,Scope)->mut);
+
+            if(!(ls=Parser_OP_search(op->critere))){
+                pthread_rwlock_unlock(Cast(TaskWorkerScope,Scope)->lock);
+                BufferInit(reply,sizeof(CommHeader));
+                head.size=0;
+                memcpy(reply->buf_head,&head,sizeof(CommHeader)*sizeof(char));
+                reply->csor_rd+=sizeof(CommHeader)*sizeof(char);
+                break;
+            }
+
+            pthread_rwlock_unlock(Cast(TaskWorkerScope,Scope)->lock);
+
+            if(!(result=REListToTuple(ls,"\n"))){
+                free(ls);
+                BufferInit(reply,sizeof(CommHeader));
+                head.size=0;
+                memcpy(reply->buf_head,&head,sizeof(CommHeader)*sizeof(char));
+                reply->csor_rd+=sizeof(CommHeader)*sizeof(char);
+                break;
+            }
+            free(ls);
+            BufferInit(reply,(sizeof(CommHeader)+strlen(result))*sizeof(char));
+            head.size=strlen(result);
+            memcpy(reply->buf_head,&head,sizeof(CommHeader)*sizeof(char));
+            reply->csor_rd+=sizeof(CommHeader)*sizeof(char);
+            strcpy(reply->csor_rd,result);
+            reply->csor_rd+=strlen(result);
+            free(result);
+            break;
+        }
+        case AJOUT:{
+            pthread_mutex_lock(Cast(TaskWorkerScope,Scope)->mut);
+            pthread_rwlock_rdlock(Cast(TaskWorkerScope,Scope)->lock);
+            pthread_mutex_unlock(Cast(TaskWorkerScope,Scope)->mut);
+            
+            head.size=(Parser_OP_add(op->critere)?1:0);
+            pthread_rwlock_unlock(Cast(TaskWorkerScope,Scope)->lock);
+
+            BufferInit(reply,sizeof(CommHeader));
+            memcpy(reply->buf_head,&head,sizeof(CommHeader)*sizeof(char));
+            reply->csor_rd+=sizeof(CommHeader)*sizeof(char);
+            break;
+        }
+        case RETRAIT:{
+            pthread_mutex_lock(Cast(TaskWorkerScope,Scope)->mut);
+            pthread_rwlock_rdlock(Cast(TaskWorkerScope,Scope)->lock);
+            pthread_mutex_unlock(Cast(TaskWorkerScope,Scope)->mut);
+            
+            head.size=(Parser_OP_remove(op->critere)?1:0);
+            pthread_rwlock_unlock(Cast(TaskWorkerScope,Scope)->lock);
+
+            BufferInit(reply,sizeof(CommHeader));
+            memcpy(reply->buf_head,&head,sizeof(CommHeader)*sizeof(char));
+            reply->csor_rd+=sizeof(CommHeader)*sizeof(char);
+            break;
+        }
+        default:{
+            BufferInit(reply,sizeof(CommHeader));
+            head.size=0;
+            memcpy(reply->buf_head,&head,sizeof(CommHeader)*sizeof(char));
+            reply->csor_rd+=sizeof(CommHeader)*sizeof(char);
+            break;
+        }
+    }
+    operation_liberer(op);
+    handler_recv->eventData=reply;
+    handler_recv->freeData=BufferFree;
+    switch(write(
+        Cast(TaskWorkerScope,Scope)->toIOWorkers,&handler_recv,sizeof(h_EvtHandler)
+    )){
+        case -1:
+        case 0:
+            EvtHandlerFree(handler_recv);
+            return E_IO_ERROR;
+        default:
+            break;
+    }
+    return handleTaskReception(evt);//recurse
 }

@@ -83,7 +83,7 @@
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
 // Header file
-#include "modules/critere.h"
+#include "critere.h"
 
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
@@ -108,14 +108,6 @@
  * @note HLR03	: 	Structure de donnees permettant de contenir tous les arguments recu
  * 			  		dans le programme principal.
  */
-struct critere
-{
-	str 		   type_titre;
-	h_table_string titre;
-	h_table_string personne;
-	h_table_string annee;
-	h_table_string cote;
-};
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
 
@@ -196,7 +188,7 @@ cstr critere_get_type_titre(pt_critere const critere){
 	);
 }
 //---------------------------------------------
-bool critere_set_type_titre(pt_critere const critere, cstr type_titre){
+BOOL critere_set_type_titre(pt_critere const critere, cstr type_titre){
 	if(!( critere && type_titre ) )
 		return FALSE;
 
@@ -229,7 +221,7 @@ unsigned int critere_set(	pt_critere 	const 	critere			,
 		table_string_liberer(*selection);
 	}
 
-	//retourne le booleen du succes de lallocation
+	//retourne le BOOLeen du succes de lallocation
 	return (((*selection)=table_string_creer(s_tuple_critere,S_CRITERE_TOKEN_C)) != NULL);
 }
 //-------------------------------------------

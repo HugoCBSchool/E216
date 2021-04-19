@@ -36,7 +36,7 @@
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
 // Header file
-#include "modules/client.h"
+#include "client.h"
 
 
 
@@ -49,11 +49,6 @@
  * @note	:	HLR04 Structure des operations contenant la strucutre des criteres,
  				l'operation choisi et le  type de titre pour l'ajout.
  */
-struct operation
-{
-	type_alias T;
-	pt_critere critere;
-};
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
 
@@ -253,7 +248,7 @@ str serialiser_operation(pt_operation oper)
 {
 	str  buf     =NULL;		// chaine de caractere tampon pour la sortie.
 	str  buf2	 =NULL;
-    bool success =TRUE;		// Variable booleen pour indiquation de reussite.
+    BOOL success =TRUE;		// Variable BOOLeen pour indiquation de reussite.
     char type_operation[2] = "\0"; // Tableau pour ajouter le type d'operation.
 
 	if(!oper)
